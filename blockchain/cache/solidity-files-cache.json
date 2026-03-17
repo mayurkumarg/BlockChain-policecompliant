@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "D:\\WebDev\\PROJECTS\\Police Complaint BlockChain\\Main\\blockchain\\contracts\\PoliceComplaintSystem.sol": {
+      "lastModificationDate": 1773727457923,
+      "contentHash": "6ae4d17c585507a900573e719faf7a6b",
+      "sourceName": "contracts/PoliceComplaintSystem.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "PoliceComplaintSystem"
+      ]
+    }
+  }
+}

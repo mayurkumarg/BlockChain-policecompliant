@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Blockchain-based Police Complaint Management System
 
 A decentralized application for submitting and managing police complaints using Ethereum blockchain and IPFS for data storage.
@@ -109,3 +110,6 @@ Create `.env` files in backend and frontend directories with necessary configura
 ## License
 
 MIT
+=======
+# BlockChain-policecompliant
+>>>>>>> 8267872574107c3f9694578d3235b83c98046671

@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 const Complaint = require('../models/Complaint');
+const { protect, authorize } = require('../middleware/authMiddleware');
 // const { contract } = require('../config/blockchain');
 // const ipfs = require('../config/ipfs'); // Disabled
 
@@ -20,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Submit complaint
-router.post('/submit', async (req, res) => {
+router.post('/submit', protect, authorize('CITIZEN'), async (req, res) => {
   try {
     console.log("BODY RECEIVED:", req.body);
 
@@ -62,7 +63,7 @@ router.post('/submit', async (req, res) => {
 });
 
 // Get all complaints
-router.get('/', async (req, res) => {
+router.get('/', protect, authorize('POLICE', 'ADMIN'), async (req, res) => {
   try {
     const complaints = await Complaint.find();
     res.json(complaints);
@@ -72,7 +73,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get complaint by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', protect, authorize('POLICE', 'ADMIN'), async (req, res) => {
   try {
     const complaint = await Complaint.findOne({ id: req.params.id });
     if (!complaint) return res.status(404).json({ error: 'Complaint not found' });
@@ -83,22 +84,25 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update complaint status
-router.put('/:id/status', async (req, res) => {
+router.put('/:id/status', protect, authorize('POLICE', 'ADMIN'), async (req, res) => {
   try {
     const { status } = req.body;
+    console.log(`[DEBUG] Update attempt for ${req.params.id} to '${status}' by user: ${req.user.email} (Role: ${req.user.role})`);
+    
     const complaint = await Complaint.findOneAndUpdate(
       { id: req.params.id },
       { status },
       { new: true }
     );
-    if (!complaint) return res.status(404).json({ error: 'Complaint not found' });
+    if (!complaint) {
+        console.log(`[DEBUG] Complaint not found: ${req.params.id}`);
+        return res.status(404).json({ error: 'Complaint not found' });
+    }
 
-    // Update on blockchain
-    // const tx = await contract.updateStatus(req.params.id, status);
-    // await tx.wait();
-
+    console.log(`[DEBUG] Success updating ${req.params.id} to ${status}`);
     res.json(complaint);
   } catch (error) {
+    console.error(`[DEBUG] Update error:`, error.message);
     res.status(500).json({ error: 'Failed to update status' });
   }
 });

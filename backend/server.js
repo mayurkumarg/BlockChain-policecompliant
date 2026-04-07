@@ -10,9 +10,10 @@ dotenv.config();
 
 // Import routes
 const complaintRoutes = require('./routes/complaints');
+const authRoutes = require('./routes/auth');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 
 // Middleware
 app.use(cors());
@@ -29,6 +30,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/police-co
 
 // Routes
 app.use('/api/complaints', complaintRoutes);
+app.use('/api/auth', authRoutes);
 
 // Start server
 app.listen(PORT, () => {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { Send, CheckCircle2, AlertCircle, FileText } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const UserPortal = () => {
   const [form, setForm] = useState({
@@ -14,6 +15,7 @@ const UserPortal = () => {
   
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,9 +24,14 @@ const UserPortal = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/complaints/submit',
+        'http://localhost:5005/api/complaints/submit',
         form,
-        { headers: { 'Content-Type': 'application/json' } }
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`
+          } 
+        }
       );
 
       setStatus({ type: 'success', message: 'Complaint submitted successfully. It is now secured on the blockchain.' });

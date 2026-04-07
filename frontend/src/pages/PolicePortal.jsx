@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Search, Filter, ShieldCheck, Clock, MapPin, Hash, CheckCircle, RefreshCcw } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 const PolicePortal = () => {
   const [complaints, setComplaints] = useState([]);
@@ -8,6 +9,7 @@ const PolicePortal = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     fetchComplaints();
@@ -16,7 +18,9 @@ const PolicePortal = () => {
   const fetchComplaints = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/complaints');
+      const response = await axios.get('http://localhost:5005/api/complaints', {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
       setComplaints(response.data);
     } catch (error) {
       console.error('Error fetching complaints:', error);
@@ -27,7 +31,9 @@ const PolicePortal = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/complaints/${id}/status`, { status });
+      await axios.put(`http://localhost:5005/api/complaints/${id}/status`, { status }, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
       fetchComplaints();
       if (selectedComplaint && selectedComplaint.id === id) {
         setSelectedComplaint({ ...selectedComplaint, status });
